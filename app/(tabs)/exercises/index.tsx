@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useCharacter } from '@/hooks/useCharacter';
+import { useWorkouts } from '@/hooks/useWorkouts';
 
 export default function AddExercise() {
   const [name, setName] = useState('');
@@ -9,9 +10,11 @@ export default function AddExercise() {
   const [reps, setReps] = useState('12');
   const [weight, setWeight] = useState('0');
   const { incrementXP } = useCharacter();
+  const { addWorkout } = useWorkouts();
 
-  const handleSave = () => {
-    // In a real app, save to database
+  const handleSave = async () => {
+    if (!name.trim()) return;
+    await addWorkout({ name, sets, reps, weight });
     incrementXP(50); // Reward XP for adding an exercise
     router.back();
   };
